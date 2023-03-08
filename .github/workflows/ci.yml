@@ -1,26 +1,23 @@
 name: Windows CI
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+
+on: [ push, pull_request ]
+
 jobs:
   build:
-    strategy:
-      fail-fast: false
-      matrix:
-        os:
-          - windows-latest
-        ocaml-compiler:
-          - 4.13.x
-    runs-on: ${{ matrix.os }}
+    runs-on: windows-latest
+
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Use OCaml ${{ matrix.ocaml-compiler }}
+        uses: actions/checkout@v3
+
+      - name: Set-up OCaml
         uses: ocaml/setup-ocaml@v2
         with:
-          ocaml-compiler: ${{ matrix.ocaml-compiler }}
+          ocaml-compiler: ocaml.5.0.0,ocaml-option-mingw
+          opam-repositories: |
+            dra27: https://github.com/dra27/opam-repository.git#windows-5.0
+            default: https://github.com/fdopen/opam-repository-mingw.git#opam2
+
       - run: opam install . --deps-only --with-test
       - run: opam exec -- dune build
       - run: opam exec -- dune runtest
