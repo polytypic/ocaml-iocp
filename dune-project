@@ -12,5 +12,6 @@
  (depends
    cstruct
    optint
-   (mdx :with-test)))
+   (mdx :with-test)
+   (alcotest :with-test)))
 (using mdx 0.1)
